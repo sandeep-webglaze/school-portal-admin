@@ -1,0 +1,23 @@
+import { ReactNode } from 'react';
+// third-party
+import { motion } from 'framer-motion';
+
+// ==============================|| ANIMATION BUTTON ||============================== //
+interface AnimateBtnProps {
+  children: ReactNode;
+  type?: string;
+}
+
+export default function AnimateButton({ children, type = 'scale' }: AnimateBtnProps) {
+  switch (type) {
+    case 'rotate': // only available in paid version
+    case 'slide': // only available in paid version
+    case 'scale': // only available in paid version
+    default:
+      return (
+        <motion.div whileHover={{ scale: 1 }} whileTap={{ scale: 0.9 }}>
+          {children}
+        </motion.div>
+      );
+  }
+}
