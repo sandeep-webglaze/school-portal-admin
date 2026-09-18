@@ -1,0 +1,146 @@
+====================================================================
+  EDUCATION PORTAL — PROJECT WORK REPORT
+  Dubai School-Search Portal (rebrand of the EdHippo clone)
+  Report date: 18 September 2026
+====================================================================
+
+--------------------------------------------------------------------
+1. OVERVIEW
+--------------------------------------------------------------------
+The three apps (server / webapp / admin) of the old "EdHippo" clone
+have been rebranded and rebuilt into "Education Portal" — a school
+discovery + admission-guidance platform for Dubai.
+
+  - Brand name .... Education Portal (Dubai)
+  - Colours ....... Royal Blue #1e4fa3  +  Gold #d4af37
+  - Backend ....... NestJS + MongoDB (separate DB) — Redis removed
+  - Live API ...... https://school-portal-backend-wt5b.onrender.com
+                    (verified LIVE, MongoDB connected)
+
+All "EdHippo" branding, text and API data has been removed from the
+UI across all three apps.
+
+--------------------------------------------------------------------
+2. BACKEND (server) — NestJS
+--------------------------------------------------------------------
+[Done]
+  - Runs completely WITHOUT Redis now:
+      * Cache      -> in-memory (was Redis)
+      * Throttler  -> in-memory (was Redis)
+      * Email/OTP  -> sent directly (Bull queue removed)
+  - main.ts now listens on the host PORT (Render), bound to 0.0.0.0
+  - Docker build fixed (yarn 4 node-modules linker, mongoose pinned)
+  - API host / images host wired to the new production URL
+  - New helper: scripts/create-admin.js  (creates the first admin
+    user with an argon2-hashed password)
+
+[Verified]
+  - GET /api/app-configuration returns 200 {"data":null}  (DB empty)
+  - GET /api/school/list returns valid JSON (Mongo connected)
+
+--------------------------------------------------------------------
+3. WEBAPP (Next.js 14) — Public site
+--------------------------------------------------------------------
+API / config
+  - Connected to the live backend URL (env-based, safe fallback)
+  - Fixed getAppConfig crash ("undefined" is not valid JSON) — now
+    always returns null instead of undefined for unstable_cache
+
+Home page (fully redesigned, 90% width, brand colours)
+  - Hero + search card:
+      * Thick blue top-accent border, thin sides
+      * Pill tabs with clear selected / unselected states
+      * Custom "Picker" dropdowns (not native selects) with icons
+      * Popular searches as chips + light footer strip
+  - Popular School Categories  -> school TYPES
+  - Explore by Curriculum      -> boards (distinct, no overlap)
+  - How It Works (4 steps)
+  - Featured Schools
+  - Trending "Popular Schools This Week" — REAL data from the API,
+    shows shimmer skeletons while loading
+  - Why Choose — light modern design, colored value cards + photo
+  - Get Admission Help (warm banner form, +971, optional email)
+  - Admissions banner (glass stats card)
+  - Testimonials
+  - FAQ — redesigned accordion + support card (fixed a stray "bl")
+  - Explore by Area
+  - All section labels unified into small navy + gold badges
+
+Schools page (/schools)
+  - Redesigned to match the approved mockup, 90% width
+  - Wired to real backend: schools, school types, boards, cities
+  - Working filters (type, board, fee range, area) + search
+  - Card-shaped shimmer skeletons while loading; clean empty state
+  - "View Details" links to real /school/{slug}
+
+Register + Get Admission Help
+  - Modern banner-style split cards (light blue / warm cream)
+  - Two-tile toggle (For Schools / For Parents) — only one form shows
+  - Icon inputs, +971 phone prefix, "Use my location", trust rows
+
+About page
+  - Modern Dubai redesign, LEFT-aligned navy hero + photo
+  - Stats band, Who We Are, Mission & Vision, Values, CTA
+
+Contact page
+  - Removed old India / Delhi / "Academy" content -> now Dubai
+  - Left-aligned navy hero, info cards + message form (split),
+    Dubai Google map, CTA. Email/phone from constants fallback.
+  - SEO metadata updated to Dubai
+
+Navigation / Footer
+  - "Guides" removed from the menu
+  - Footer rebuilt: modern 4-column (Brand+contact, Quick Links,
+    Get Started, Newsletter) with gold accents + hover effects
+
+Loading experience
+  - Circular spinners replaced with SHIMMER / skeleton placeholders
+  - Reusable Shimmer component + global shimmer CSS
+  - Applied to route loaders, /schools, home Trending
+
+--------------------------------------------------------------------
+4. ADMIN (React / CRA + MUI) — Dashboard
+--------------------------------------------------------------------
+  - Rebranded EdHippo Academy -> Education Portal everywhere
+    (logo mark, sidebar, login screen, footer, browser title, manifest)
+  - Theme primary colour -> Royal Blue (#1e4fa3)
+  - API host wired to the live backend URL
+  - Vercel build fixed (CI=false so eslint warnings don't fail)
+  - Local dev runs on PORT 3001 (webapp stays on 3000)
+  - SEO example tips updated to Dubai
+
+--------------------------------------------------------------------
+5. WHAT YOU STILL NEED TO DO
+--------------------------------------------------------------------
+Push + redeploy (per repo):
+    cd server  -> git add -A && git commit -m "..." && git push
+    cd webapp  -> git add -A && git commit -m "..." && git push
+    cd admin   -> git add -A && git commit -m "..." && git push
+
+Render env vars (backend) — REDIS_* no longer needed:
+  - Email:  EDHIPPO_SUPPORT_MAIL, EDHIPPO_SUPPORT_MAIL_PASSWORD,
+            EDHIPPO_HOST, EDHIPPO_PORT, EDHIPPO_ENQUIRY_NOTIFICATION_MAILS
+  - Uploads: S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_BUCKET,
+             S3_REGION, S3_BUCKET_PUBLIC_FOLDER
+  - MONGO_URI is already set (DB connects)
+
+Create the first admin user (run in the server folder):
+    node scripts/create-admin.js your-email@example.com "YourPassword" "Admin"
+
+Add Dubai data via the admin panel (so the site fills up):
+  - Cities / areas, Boards (British/IB/CBSE/...), School Types,
+    Facilities, and Schools
+  - Once added, they appear automatically on the webapp
+
+--------------------------------------------------------------------
+6. NOTES
+--------------------------------------------------------------------
+  - The DB is new and empty, so schools/config show empty states
+    until you add data in admin — this is expected, not a bug.
+  - Newsletter footer form currently shows a success toast only
+    (no email is stored) — can be wired to the backend if needed.
+  - Rotate any leaked live keys (e.g. Razorpay) that appear in logs.
+
+====================================================================
+  End of report — Education Portal (Dubai)
+====================================================================
