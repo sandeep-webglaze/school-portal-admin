@@ -76,6 +76,31 @@ export async function createNewUser(body: CreateUser): Promise<Response<IUser>> 
   return await responseHandler(res);
 }
 
+export interface RegisterSchoolUserDto {
+  name: string;
+  mail: string;
+  phoneNumber: string;
+  password: string;
+  school: string;
+}
+
+// Creates a School Admin login linked to a specific school (POST /user/school-user).
+export async function createSchoolUser(body: RegisterSchoolUserDto): Promise<Response<{ acknowledged: boolean }>> {
+  const endpoint = API_HOST + '/user/school-user';
+  const res = await fetch(endpoint, {
+    method: 'POST',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+      ...generateAuthHeaders()
+    },
+    body: JSON.stringify(body)
+  });
+  return await responseHandler(res);
+}
+
 export async function updateUser(body: UpdateUserDto, userId?: string): Promise<Response<{ acknowledged: boolean }>> {
   const endpoint = userId ? `${API_HOST}/user/profile/${userId}` : `${API_HOST}/user/profile`;
   const res = await fetch(endpoint, {

@@ -31,7 +31,7 @@ import useDialog from 'hooks/Dialog';
 import useDebounce from 'hooks/useDebounce';
 import moment from 'moment';
 import { Fragment, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import * as Yup from 'yup';
 
 const MasterLeads = () => {
@@ -43,12 +43,24 @@ const MasterLeads = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState<string | null>(null);
   const [selectedLead, setSelectedLead] = useState<ILead>();
+  const location = useLocation();
 
   const [filters, setFilters] = useState<any>();
   const { open: filterModal, setOpen: setFilterModal, handleClose: closeFilters, handleOpen: openFilters } = useDialog();
 
   useEffect(() => {
     masterLeads({ page: 1 });
+  }, []);
+
+  // Prefill + open the Add-Lead dialog when arriving from a CTA "Convert to Lead".
+  useEffect(() => {
+    const convert = (location.state as any)?.convertLead;
+    if (convert) {
+      setSelectedLead({ name: convert.name, phoneNumber: convert.phoneNumber } as ILead);
+      handleOpen();
+      window.history.replaceState({}, document.title);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleEditClick = (state: ILead) => {

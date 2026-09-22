@@ -12,7 +12,7 @@ const config = {
 };
 export const dark = {
   darkBlue: {
-    main: '#278c22'
+    main: '#1e4fa3'
   }
 };
 

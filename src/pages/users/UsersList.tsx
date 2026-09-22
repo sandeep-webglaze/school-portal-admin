@@ -1,8 +1,9 @@
 import { EyeOutlined } from '@ant-design/icons';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Avatar, Box, Button, Chip, Grid, IconButton, Stack, Tab, TextField, Tooltip, Typography } from '@mui/material';
+import { Autocomplete, Avatar, Box, Button, Chip, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, Stack, Tab, TextField, Tooltip, Typography } from '@mui/material';
 import { ErrorResponseSchema } from 'api/types';
-import { CreateUser, IUser, createNewUser, deleteUser, getUsersList, toggleVerification } from 'api/user';
+import { CreateUser, IUser, createNewUser, createSchoolUser, deleteUser, getUsersList, toggleVerification } from 'api/user';
+import { getSchoolList } from 'api/school';
 import UserImg from 'assets/images/users/userAvatar.png';
 import CommonUserFields from 'components/CommonFields/CommonUserFields';
 import AddDialog from 'components/Dialogs/AddDialog';
@@ -37,12 +38,21 @@ const UsersList = () => {
   const [searchParams, setSearchParams] = useSearchParams({ role: 'all' });
   const tabValue = searchParams.get('role') || 'all';
   const { setSnack } = useSnackBarContext();
+  const [schools, setSchools] = useState<any[]>([]);
+  const [schoolSel, setSchoolSel] = useState<any>(null);
 
   useEffect(() => {
     const query: any = { page: 1 };
     if (tabValue !== 'all') query.role = tabValue;
     usersList(query);
   }, [tabValue]);
+
+  // Load schools once so a new School Admin login can be linked to one.
+  useEffect(() => {
+    getSchoolList({ page: 1, limit: 1000 })
+      .then((res: any) => setSchools(res?.data?.schools ?? res?.data ?? []))
+      .catch(() => {});
+  }, []);
 
   const handleViewClick = (slug?: string) => {
     window.open(SITE_DOMAIN + `/school/${slug}`);
@@ -185,6 +195,30 @@ const UsersList = () => {
                 sx={{ my: 1 }}
                 value={formik.values.password}
               />
+              <FormControl fullWidth sx={{ my: 1 }}>
+                <InputLabel id="role-label">Role</InputLabel>
+                <Select
+                  labelId="role-label"
+                  label="Role"
+                  name="role"
+                  value={formik.values.role}
+                  onChange={(e) => formik.setFieldValue('role', e.target.value)}
+                >
+                  <MenuItem value={USER_ROLE.USER}>User</MenuItem>
+                  <MenuItem value={USER_ROLE.SUB_ADMIN}>Sub Admin</MenuItem>
+                  <MenuItem value={USER_ROLE.SCHOOL_ADMIN}>School Admin</MenuItem>
+                </Select>
+              </FormControl>
+              {formik.values.role === USER_ROLE.SCHOOL_ADMIN && (
+                <Autocomplete
+                  options={schools}
+                  getOptionLabel={(o: any) => o?.name ?? ''}
+                  value={schoolSel}
+                  onChange={(_e, val) => setSchoolSel(val)}
+                  isOptionEqualToValue={(o: any, v: any) => o?._id === v?._id}
+                  renderInput={(params) => <TextField {...params} label="Link to School" required sx={{ my: 1 }} />}
+                />
+              )}
               <Button style={{ height: '3em', margin: '10px 0px' }} fullWidth={true} size="large" type="submit" variant="contained">
                 Submit
               </Button>
@@ -203,6 +237,29 @@ const UsersList = () => {
 
   async function createUser(values: CreateUser) {
     try {
+      // School Admin -> create a login LINKED to the selected school.
+      if (values.role === USER_ROLE.SCHOOL_ADMIN) {
+        if (!schoolSel?._id) {
+          setMsg({ active: true, severity: 'error', msg: 'Please select a school to link this login' });
+          return;
+        }
+        const res = await createSchoolUser({
+          name: values.name,
+          mail: values.mail,
+          phoneNumber: values.phoneNumber,
+          password: values.password,
+          school: schoolSel._id
+        });
+        if (res.data) {
+          setMsg({ active: true, severity: 'success', msg: 'School login created successfully' });
+          formik.resetForm();
+          setSchoolSel(null);
+          setTimeout(() => handleClose(), 600);
+          usersList({ page: 1 });
+        }
+        return;
+      }
+
       formik.resetForm();
       const res = await createNewUser(values);
       if (res.data) {

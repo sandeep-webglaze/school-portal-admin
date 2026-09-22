@@ -6,8 +6,11 @@ import ActionsTool from 'components/Table/ActionsTool';
 import { Snack } from 'contexts/SnackBarContext';
 import useDialog from 'hooks/Dialog';
 import useSnackBarContext from 'hooks/useSnackBar';
+import { Button, Stack } from '@mui/material';
 import moment from 'moment';
 import { Fragment, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { ROUTES } from 'routes/MainRoutes';
 
 const CtaList = () => {
   const [loading, setLoading] = useState(false);
@@ -16,6 +19,14 @@ const CtaList = () => {
   const [selectedEnq, setSelectedEnq] = useState<ICta>();
   const { open, handleClose, handleOpen } = useDialog();
   const { setSnack } = useSnackBarContext();
+  const navigate = useNavigate();
+
+  // Send a parent enquiry to the Add-Lead form, prefilled with name + phone.
+  const convertToLead = (enquiry: ICta) => {
+    navigate(ROUTES.LEADS, {
+      state: { convertLead: { name: enquiry.name, phoneNumber: enquiry.phoneNumber } }
+    });
+  };
 
   useEffect(() => {
     ctaList({ page: 1 });
@@ -51,7 +62,14 @@ const CtaList = () => {
               'PHONE NUMBER': enquiry.phoneNumber,
               PAGE: enquiry.pageUrl,
               DATE: moment(enquiry.createdAt).format('ll'),
-              ACTIONS: <ActionsTool isDelete isEdit={false} handleDelete={() => handleDelete(enquiry)} />
+              ACTIONS: (
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Button size="small" variant="outlined" onClick={() => convertToLead(enquiry)}>
+                    Convert to Lead
+                  </Button>
+                  <ActionsTool isDelete isEdit={false} handleDelete={() => handleDelete(enquiry)} />
+                </Stack>
+              )
             }))
           );
           setTotalCount(res.totalCount as number);

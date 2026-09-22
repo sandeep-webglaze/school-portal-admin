@@ -18,7 +18,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { ROUTES } from 'routes/MainRoutes';
 
-const steps = ['School Deatils', 'School Images', 'Facilities'];
+const steps = ['School Details', 'School Images', 'Facilities'];
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -26,12 +26,12 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundImage: 'radial-gradient(circle at -1% 57.5%, rgb(19, 170, 82) 0%, rgb(0, 102, 43) 90%);'
+      backgroundImage: 'radial-gradient(circle at -1% 57.5%, #3b6fd4 0%, #1e4fa3 90%);'
     }
   },
   [`&.${stepConnectorClasses.completed}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundImage: 'radial-gradient(circle at -1% 57.5%, rgb(19, 170, 82) 0%, rgb(0, 102, 43) 90%);'
+      backgroundImage: 'radial-gradient(circle at -1% 57.5%, #3b6fd4 0%, #1e4fa3 90%);'
     }
   },
   [`& .${stepConnectorClasses.line}`]: {
@@ -139,8 +139,8 @@ const AddSchool = () => {
                   <Button variant="outlined" disabled={currentStep === 0} onClick={handleStepBack}>
                     Previous
                   </Button>
-                  <Button variant="contained" type="submit" disabled={currentStep === 3} sx={{ float: 'right' }}>
-                    Next
+                  <Button variant="contained" type="submit" sx={{ float: 'right' }}>
+                    {isLastStep ? 'Submit School' : 'Next'}
                   </Button>
                 </Box>
               </Form>
@@ -189,11 +189,11 @@ const ColorlibStepIconRoot = styled('div')<{
   justifyContent: 'center',
   alignItems: 'center',
   ...(ownerState.active && {
-    backgroundImage: 'radial-gradient(circle at -1% 57.5%, rgb(19, 170, 82) 0%, rgb(0, 102, 43) 90%);',
+    backgroundImage: 'radial-gradient(circle at -1% 57.5%, #3b6fd4 0%, #1e4fa3 90%);',
     boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)'
   }),
   ...(ownerState.completed && {
-    backgroundImage: 'radial-gradient(circle at -1% 57.5%, rgb(19, 170, 82) 0%, rgb(0, 102, 43) 90%);'
+    backgroundImage: 'radial-gradient(circle at -1% 57.5%, #3b6fd4 0%, #1e4fa3 90%);'
   })
 }));
 
