@@ -28,6 +28,13 @@ const EnquiryPages = {
       type: 'item',
       url: '/call-to-action',
       icon: AimOutlined
+    },
+    {
+      id: 'NewsletterPages-page',
+      title: 'Newsletter',
+      type: 'item',
+      url: '/newsletter',
+      icon: AimOutlined
     }
   ]
 };

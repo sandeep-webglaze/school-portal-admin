@@ -6,6 +6,7 @@ import MainLayout from 'layout/MainLayout';
 import BoardsList from 'pages/Boards/BoardsList';
 import ClassificationList from 'pages/Classification/ClassificationList';
 import CtaList from 'pages/Cta/CtaList';
+import NewsletterList from 'pages/Newsletter/NewsletterList';
 import EnquiryList from 'pages/Enquiry/EnquiryList';
 import MasterLeads from 'pages/MasterLeads';
 import RegisterSchoolEnquiries from 'pages/RegisterSchoolEnquiry';
@@ -71,6 +72,7 @@ const ROUTES = {
   ENQUIRIES: '/enquiry',
   REGISTER_SCHOOL_ENQ: '/register-school-enquiry',
   CTA: '/call-to-action',
+  NEWSLETTER: '/newsletter',
   BASIC_SEO: '/basic-seo',
   EDIT_SEO: '/edit-seo',
   LEADS: '/leads'
@@ -160,6 +162,10 @@ const MainRoutes = {
     {
       path: ROUTES.CTA,
       element: <CtaList />
+    },
+    {
+      path: ROUTES.NEWSLETTER,
+      element: <NewsletterList />
     },
     {
       path: ROUTES.BASIC_SEO,
