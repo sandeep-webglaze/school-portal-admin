@@ -54,7 +54,7 @@ const SchoolsPages = {
     },
     {
       id: 'locationsPages-page',
-      title: 'Cities',
+      title: 'Cities & Areas',
       type: 'item',
       url: '/locations',
       icon: AimOutlined

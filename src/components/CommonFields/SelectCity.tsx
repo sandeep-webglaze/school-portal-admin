@@ -24,11 +24,12 @@ export const CommonCitySelect: FC<CommonUserSearchProps> = ({ selected, handleCh
       options={cities}
       value={cities.find((city) => city?._id === selected) ?? (null as any)}
       onChange={(e: any, newVal: any) => handleChange(newVal)}
+      groupBy={(option: any) => option.state || 'Other'}
       autoHighlight
-      getOptionLabel={(option: any) => option.city}
+      getOptionLabel={(option: any) => (option.state ? `${option.city} — ${option.state}` : option.city)}
       renderOption={(props, option: any) => (
         <Box component="li" {...props}>
-          {option.city}
+          {option.city}{option.state ? `, ${option.state}` : ''}
         </Box>
       )}
       fullWidth
@@ -40,7 +41,7 @@ export const CommonCitySelect: FC<CommonUserSearchProps> = ({ selected, handleCh
           required={required}
           helperText={helperText}
           sx={{ '.css-1rv8w63-MuiFormLabel-root-MuiInputLabel-root': { lineHeight: '1.4375em' } }}
-          label={'Select City'}
+          label={'Select Area'}
         />
       )}
     />

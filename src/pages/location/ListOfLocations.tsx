@@ -94,22 +94,22 @@ const ListOfLocations = () => {
         totalRowCount={totalCount}
         onPageChange={(pagination: any) => cityList(pagination)}
         tableHeaderContent={
-          <TableToolBar searchHandler={(newValue: string) => setSearch(newValue)} btnClickHandler={handleOpen} btnText="Add City" />
+          <TableToolBar searchHandler={(newValue: string) => setSearch(newValue)} btnClickHandler={handleOpen} btnText="Add Location" />
         }
-        columns={['CITY IMAGE', 'IS Featured', 'CITY NAME', 'STATE', 'ACTIONS']}
+        columns={['IMAGE', 'IS Featured', 'AREA', 'CITY', 'ACTIONS']}
       />
       <Formik
         initialValues={{
           city: selected?.city ?? '',
           slug: selected?.slug ?? '',
-          country: selected?.country ?? 'India',
+          country: selected?.country ?? 'United Arab Emirates',
           isPopularCity: selected?.isPopularCity ?? false,
           state: selected?.state ?? '',
           icon: selected?.icon ?? ''
         }}
         validationSchema={Yup.object().shape({
-          city: Yup.string().min(3).max(255).required('City is required'),
-          state: Yup.string().min(3).max(255).required('State is required')
+          city: Yup.string().min(3).max(255).required('Area is required'),
+          state: Yup.string().min(3).max(255).required('City is required')
         })}
         onSubmit={createCity}
         enableReinitialize
@@ -119,8 +119,8 @@ const ListOfLocations = () => {
             <AddDialog
               open={open}
               fullScreen={false}
-              title="Add New City"
-              subtitle="Fill Details to Add City"
+              title="Add Location"
+              subtitle="Add an Area within a City (e.g. Al Barsha in Dubai)"
               handleClose={handleCloseAddPopup}
               loading={formik.isSubmitting}
               msg={msg}
@@ -137,7 +137,7 @@ const ListOfLocations = () => {
                       required
                       error={Boolean(formik.errors.city)}
                       helperText={formik.errors.city}
-                      label="City"
+                      label="Area (e.g. Al Barsha)"
                       onBlur={formik.handleBlur}
                       onChange={(e) => handleCityChange(e, formik)}
                       name="city"
@@ -150,7 +150,7 @@ const ListOfLocations = () => {
                       required
                       error={Boolean(formik.errors.state)}
                       helperText={formik.errors.state}
-                      label="State"
+                      label="City (e.g. Dubai)"
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
                       name="state"
@@ -230,9 +230,9 @@ const ListOfLocations = () => {
           setCities(
             res.data.map((city: ICity) => ({
               key: city._id,
-              'CITY IMAGE': <img src={city.icon} width={50} height={50} />,
-              'CITY NAME': city.city,
-              STATE: city.state,
+              IMAGE: <img src={city.icon} width={50} height={50} />,
+              AREA: city.city,
+              CITY: city.state,
               'IS Featured': city.isPopularCity ? 'Yes' : 'No',
               ACTIONS: <ActionsTool isDelete handleEdit={() => handleEditClick(city)} handleDelete={() => handleDeleteClick(city)} />
             }))

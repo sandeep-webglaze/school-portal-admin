@@ -5,12 +5,12 @@ import dashboard from './dashboard';
 import EnquiryPages from './enquiry';
 import LeadPages from './leads';
 import SchoolsPages from './schools';
-import SlugsPages from './slugs';
+import SeoPages from './seo';
 import UserPages from './users';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [dashboard, UserPages, SchoolsPages, SlugsPages, AuthorPages, EnquiryPages, LeadPages, SettingPage]
+  items: [dashboard, UserPages, SchoolsPages, SeoPages, AuthorPages, EnquiryPages, LeadPages, SettingPage]
 };
 
 export type IMenuItems = typeof menuItems;

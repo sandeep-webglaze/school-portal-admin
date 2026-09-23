@@ -8,7 +8,7 @@ const locationsPages = {
   children: [
     {
       id: 'locationsPages-page',
-      title: 'List of All Cities',
+      title: 'Cities & Areas',
       type: 'item',
       url: '/locations',
       icon: AimOutlined

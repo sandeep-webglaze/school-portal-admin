@@ -1,4 +1,4 @@
-import { Badge, Box, IconButton, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Alert, AlertTitle, Badge, Box, IconButton, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { ICreateSlug, ISlug, SlugApiProvider } from 'api/slug';
 import Filters from 'components/SlugFilters';
 import ComonTable from 'components/Table';
@@ -102,6 +102,14 @@ const SlugList = () => {
           </IconButton>
         </Badge>
       </Stack>
+      <Alert severity="info" sx={{ mb: 2 }}>
+        <AlertTitle>What are Slugs?</AlertTitle>
+        <b>Combination Slugs</b> are SEO landing pages you create for a filter combo
+        (e.g. <b>british-schools-in-dubai</b>) and open at <b>/search/&lt;slug&gt;</b>.
+        {' '}<b>School Slugs</b> are the per-school pages at <b>/school/&lt;slug&gt;</b> and are
+        created automatically when a school is added. Click <b>Add Slug</b> to create a new
+        combination page. An empty list simply means none exist yet.
+      </Alert>
       <Filters {...{ open, setOpen, handleClose, handleRefresh: slugList, filters, setFilters }} />
 
       <ComonTable
@@ -114,7 +122,7 @@ const SlugList = () => {
             searchHandler={(newValue: string) => setSearch(newValue)}
             btnClickHandler={() => navigate(ROUTES.ADD_SLUG)}
             btnText="Add Slug"
-            btnActions={Boolean(Object.keys(filters ?? {}).length !== 0 && slugs.length <= 0)}
+            btnActions={true}
           />
         }
         columns={['SLUG', 'TITLE', 'IS HOMEPAGE', 'ACTIONS']}

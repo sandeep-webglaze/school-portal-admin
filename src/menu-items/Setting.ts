@@ -15,15 +15,6 @@ const SettingPage = {
       isHeading: false,
       breadcrumbs: false,
       icon: SettingOutlined
-    },
-    {
-      id: 'basic-seo',
-      title: 'Basic Seo',
-      type: 'item',
-      url: '/basic-seo',
-      isHeading: false,
-      breadcrumbs: false,
-      icon: SettingOutlined
     }
   ]
 };
